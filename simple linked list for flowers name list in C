@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct flowers
+{
+    char f_name[20]; // biological name
+    struct flowers *next;
+};
+
+int main() 
+{
+    struct flowers *head;
+    struct flowers *Rose = NULL;
+    struct flowers *lotus = NULL;
+    struct flowers *sunflower = NULL;
+    struct flowers *traverse;
+
+    Rose = (struct flowers *)malloc(sizeof(struct flowers));
+    lotus = (struct flowers *)malloc(sizeof(struct flowers));
+    sunflower = (struct flowers *)malloc(sizeof(struct flowers));
+
+    // Assign data values
+    strcpy(Rose->f_name, "Rosa");
+    strcpy(lotus->f_name, "Nelumbo nucifera");
+    strcpy(sunflower->f_name, "Helianthus");
+
+    Rose->next = lotus;
+    lotus->next = sunflower;
+    sunflower->next = NULL;
+
+    head = Rose;
+    traverse = head;
+
+    while (traverse != NULL)
+    {
+        printf("%s\n", traverse->f_name); // Use %s to print strings
+        traverse = traverse->next;
+    }
+
+    // Free allocated memory
+    free(Rose);
+    free(lotus);
+    free(sunflower);
+
+    return 0;
+}
