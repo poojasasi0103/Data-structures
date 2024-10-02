@@ -1,0 +1,90 @@
+#include <iostream>
+#include <string>
+
+struct EffectNode {
+    std::string effectName; // Name of the audio effect
+    EffectNode* next;       // Pointer to the next effect
+    EffectNode* prev;       // Pointer to the previous effect
+
+    EffectNode(const std::string& name) : effectName(name), next(nullptr), prev(nullptr) {}
+};
+
+class EffectList {
+private:
+    EffectNode* head; // Head of the list
+    EffectNode* tail; // Tail of the list
+
+public:
+    EffectList() : head(nullptr), tail(nullptr) {}
+
+    // Add an audio effect at the end of the list
+    void addEffect(const std::string& effectName) {
+        EffectNode* newEffect = new EffectNode(effectName);
+        if (head == nullptr) {
+            head = newEffect;
+            tail = newEffect;
+        } else {
+            tail->next = newEffect;
+            newEffect->prev = tail;
+            tail = newEffect;
+        }
+        std::cout << "Added effect: " << effectName << std::endl;
+    }
+
+    // Remove an audio effect by name
+    void removeEffect(const std::string& effectName) {
+        EffectNode* current = head;
+        while (current != nullptr) {
+            if (current->effectName == effectName) {
+                if (current->prev != nullptr) {
+                    current->prev->next = current->next;
+                } else {
+                    head = current->next; // Update head if necessary
+                }
+                if (current->next != nullptr) {
+                    current->next->prev = current->prev;
+                } else {
+                    tail = current->prev; // Update tail if necessary
+                }
+                delete current;
+                std::cout << "Removed effect: " << effectName << std::endl;
+                return;
+            }
+            current = current->next;
+        }
+        std::cout << "Effect not found: " << effectName << std::endl;
+    }
+
+    // Display all audio effects
+    void displayEffects() {
+        EffectNode* current = head;
+        std::cout << "Audio Effects: ";
+        while (current != nullptr) {
+            std::cout << current->effectName << " ";
+            current = current->next;
+        }
+        std::cout << std::endl;
+    }
+
+    ~EffectList() {
+        while (head != nullptr) {
+            removeEffect(head->effectName);
+        }
+    }
+};
+
+int main() {
+    EffectList effects;
+
+    // Dynamically adding audio effects
+    effects.addEffect("Reverb");
+    effects.addEffect("Delay");
+    effects.addEffect("Equalizer");
+    effects.displayEffects();
+
+    // Removing an audio effect
+    effects.removeEffect("Delay");
+    effects.displayEffects();
+
+    return 0;
+}
